@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html>
-<head>
-<link rel="stylesheet" type="text/css" href="myStyle.css">
-</head>
+
 <body>
 
 <div class="container">
 
 <header>
    <h1>Snake Game</h1>
+
 </header>
 
         <body>
@@ -36,9 +35,9 @@
             var ctx = gameCanvas.getContext("2d");
 
             //Select the color to fill the canvas
-            ctx.fillstyle = CANVAS_BACKGROUND_COLOR;
+            ctx.fillStyle = CANVAS_BACKGROUND_COLOR;
             //Select the color for the border of the canvas
-            ctx.strokestyle = CANVAS_BORDER_COLOR;
+            ctx.strokeStyle = CANVAS_BORDER_COLOR;
 
             //Draw a "filled" rectangle to cover the entire canvas
             ctx.fillRect(0,0, gameCanvas.width, gameCanvas.height);
@@ -61,7 +60,7 @@
                 //Set the color of the snake part
                 ctx.fillStyle = SNAKE_COLOR;
                 //Set the border color of the snake part
-                ctx.strokestyle = SNAKE_BORDER_COLOR;
+                ctx.strokeStyle = SNAKE_BORDER_COLOR;
 
                 //Draw a "filled" rectangle to represent the snake part at the coordinates the part is located
                 ctx.fillRect(snakePart.x, snakePart.y, 10, 10);
