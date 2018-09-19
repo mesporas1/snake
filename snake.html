@@ -16,6 +16,7 @@
 
             <script> 
                 /** CONSTANTS **/
+                const GAME_SPEED = 100;
                 const CANVAS_BORDER_COLOR = 'black';
                 const CANVAS_BACKGROUND_COLOR = 'white';
                 const SNAKE_COLOR = 'lightgreen';
@@ -113,7 +114,7 @@
 
                         //Call main again
                         main();
-                    }, 200)
+                    }, GAME_SPEED)
                 }
 
                 function changeDirection(event){
