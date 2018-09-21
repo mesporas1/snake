@@ -116,6 +116,42 @@
                         main();
                     }, GAME_SPEED)
                 }
+                
+                function checkPosition(){
+                    const goingUp = dy === -10;
+                    const goingDown = dy === 10;
+                    const goingRight = dx === 10;
+                    const goingLeft = dx === -10;
+                    console.log(dx, dy);
+                    if (!goingRight){
+                        console.log("Going left");
+                        dx = -10;
+                        dy = 0;
+                        return true;
+                    }
+
+                    if (!goingUp){
+                        console.log("Going down");
+                        dx = 0;
+                        dy = -10;
+                        return true;
+                    }
+
+                    if (!goingLeft){
+                        console.log("going right");
+                        dx = 10;
+                        dy = 0;
+                        return true;
+                    }
+
+                    if (!goingDown){
+                        console.log("going up")
+                        dx = 0;
+                        dy = 10;
+                        return true;
+                    }
+                }
+                
 
                 function changeDirection(event){
                     const LEFT_KEY = 37;
@@ -137,7 +173,7 @@
                         dy = 0;
                     }
 
-                    if (keyPressed === UP_KEY && !goingDown){
+                    if (keyPressed === UP_KEY && !goingUp){
                         dx = 0;
                         dy = -10;
                     }
@@ -152,6 +188,38 @@
                         dy = 10;
                     }
                 }
+                
+                function moveLeft() {
+                   if (checkPosition())
+                   {
+                   dx = -10;
+                   dy = 0;
+                   }
+                }
+
+                function moveDown() {
+                    if (checkPosition()){
+                        dx = 0;
+                        dy = 10;
+                    }
+                     
+                }
+
+                function moveUp() {
+                    if (checkPosition()){
+                        dx = 0;
+                        dy = -10;
+                    }
+                }
+
+                function moveRight() {
+                    if (checkPosition()){
+                        dx = 10;
+                        dy = 0;
+                    }
+                }       
+
+                
 
                 function randomTen(min,max){
                     return Math.round((Math.random() * (max - min) + min) / 10) * 10;
@@ -191,6 +259,13 @@
                 }
 
             </script>
+
+            <div style="text-align:center;width:480px;">
+                <button onclick="moveUp()">UP</button><br><br>
+                <button onclick="moveLeft()">LEFT</button>
+                <button onclick="moveRight()">RIGHT</button><br><br>
+                <button onclick="moveDown()">DOWN</button>
+            </div>
         </body>
 
 
