@@ -7,7 +7,8 @@
 
         <header>
             <h1>Snake Game</h1>
-
+            <button onclick="main()">START</button>
+            <button onclick="restartGame()">RESTART</button>
         </header>
 
         <body>
@@ -15,12 +16,18 @@
             <canvas id="gameCanvas" width="300" height="300"></canvas>
 
             <script> 
+
+                //Horizontal velocity
+                let dx = 10;
+                //Vertical velocity
+                let dy = 0;
                 /** CONSTANTS **/
                 const GAME_SPEED = 100;
                 const CANVAS_BORDER_COLOR = 'black';
                 const CANVAS_BACKGROUND_COLOR = 'white';
                 const SNAKE_COLOR = 'lightgreen';
                 const SNAKE_BORDER_COLOR = 'darkgreen';
+                var restart = 0;
 
                 let snake = [
                     { x: 150, y: 150 },
@@ -30,10 +37,7 @@
                     { x: 110, y: 150 },
                 ];
 
-                //Horizontal velocity
-                let dx = 10;
-                //Vertical velocity
-                let dy = 0;
+                
                 
                 //Score variable
                 let score = 0;
@@ -47,9 +51,9 @@
 
 
 
-                
-                //start game
-                main();
+                //Draw board and snake
+                clearCanvas();
+                drawSnake();
                 //Create the first food location
                 createFood();
                 //Call changeDirection when a key is pressed
@@ -78,6 +82,10 @@
                     ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
 
                 }
+                
+                function restartSnake(){
+                    
+                }
 
                 function advanceSnake() {
                     const head = { x: snake[0].x + dx, y: snake[0].y + dy };
@@ -102,56 +110,51 @@
                     ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
                     ctx.strokeRect(0, 0, gameCanvas.width, gameCanvas.height);
                 }
+                
+                function restartGame(){
+                    
+                    restart = 0;
+                    main();
+                }
+               
 
                 function main() {
-                    if (didGameEnd()) return;
+                    console.log(restart);
+                    restart = didGameEnd();
+                    if (restart == 1) return;
                     setTimeout(function onTick() {
                         changingDirection = false;
                         clearCanvas();
                         drawFood();
                         advanceSnake();
                         drawSnake();
-
+                        console.log(dx, dy);
                         //Call main again
                         main();
                     }, GAME_SPEED)
                 }
                 
-                function checkPosition(){
-                    const goingUp = dy === -10;
-                    const goingDown = dy === 10;
-                    const goingRight = dx === 10;
-                    const goingLeft = dx === -10;
-                    console.log(dx, dy);
-                    if (!goingRight){
-                        console.log("Going left");
-                        dx = -10;
-                        dy = 0;
-                        return true;
-                    }
 
-                    if (!goingUp){
-                        console.log("Going down");
-                        dx = 0;
-                        dy = -10;
-                        return true;
-                    }
-
-                    if (!goingLeft){
-                        console.log("going right");
-                        dx = 10;
-                        dy = 0;
-                        return true;
-                    }
-
-                    if (!goingDown){
-                        console.log("going up")
-                        dx = 0;
-                        dy = 10;
-                        return true;
+                
+                function checkHorizontal(dx){
+                    if (dx == 10)
+                    {return "right";}
+                    else if (dx == -10)
+                    {return "left";}
+                    else{
+                        return "vertical";
                     }
                 }
                 
+                function checkVertical(dy){
+                    if (dy == 10)
+                    {return "down";}
+                    else if (dy == -10)
+                    {return "up";}
+                    else{
+                        return "horizontal";
+                    }
+                }
 
                 function changeDirection(event){
                     const LEFT_KEY = 37;
@@ -163,42 +166,41 @@
                     changingDirection = true;
 
                     const keyPressed = event.keyCode;
-                    const goingUp = dy === -10;
-                    const goingDown = dy === 10;
-                    const goingRight = dx === 10;
-                    const goingLeft = dx === -10;
+                    
 
-                    if (keyPressed === LEFT_KEY && !goingRight){
+                    if (keyPressed === LEFT_KEY && checkHorizontal(dx) !== "right"){
                         dx = -10;
                         dy = 0;
                     }
 
-                    if (keyPressed === UP_KEY && !goingUp){
+                    if (keyPressed === UP_KEY && checkVertical(dy !== "down")){
                         dx = 0;
                         dy = -10;
                     }
 
-                    if (keyPressed === RIGHT_KEY && !goingLeft){
+                    if (keyPressed === RIGHT_KEY && checkHorizontal(dx) !== "left"){
                         dx = 10;
                         dy = 0;
                     }
 
-                    if (keyPressed === DOWN_KEY && !goingDown){
+                    if (keyPressed === DOWN_KEY && checkVertical(dy) !== "down"){
                         dx = 0;
                         dy = 10;
                     }
                 }
                 
                 function moveLeft() {
-                   if (checkPosition())
+                   if (checkHorizontal(dx) !== "right") // not const goingRight = dx === 10;
                    {
-                   dx = -10;
-                   dy = 0;
+                       console.log("going left");
+                        dx = -10;
+                        dy = 0;
                    }
                 }
 
                 function moveDown() {
-                    if (checkPosition()){
+                 if (checkVertical(dy) !== "up"){ //const goingUp = dy === -10;        
+                        console.log("going down");
                         dx = 0;
                         dy = 10;
                     }
@@ -206,14 +208,16 @@
                 }
 
                 function moveUp() {
-                    if (checkPosition()){
+                    if (checkVertical(dy) !== "down"){ //const goingDown = dy === 10;
+                        console.log("going up");
                         dx = 0;
                         dy = -10;
                     }
                 }
 
                 function moveRight() {
-                    if (checkPosition()){
+                    if (checkHorizontal(dx) !== "left"){ //const goingLeft = dx === -10;
+                        console.log("going right");
                         dx = 10;
                         dy = 0;
                     }
@@ -243,11 +247,11 @@
                     ctx.strokeRect(foodX, foodY, 10, 10);
                 }
                 
-                function didGameEnd(){
+                function didGameEnd(restart){
                     for (let i = 4; i < snake.length; i++){
                         const didCollide = snake[i].x === snake[0].x && snake[i].y === snake[0].y;
 
-                        if (didCollide) return true;
+                        if (didCollide) return restart = 1;
                     }
 
                     const hitLeftWall = snake[0].x < 0;
@@ -255,7 +259,9 @@
                     const hitTopWall = snake[0].y < 0;
                     const hitBottomWall = snake[0].y > gameCanvas.height - 10;
 
-                    return hitLeftWall || hitRightWall || hitTopWall || hitBottomWall;
+                    if (hitLeftWall || hitRightWall || hitTopWall || hitBottomWall){
+                        return restart = 1;
+                    }
                 }
 
             </script>
